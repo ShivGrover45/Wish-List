@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 class WishRepository(private val wishDao: WishDao) {
 
     suspend fun addWish(wish:Wish){
-        wishDao.addWish(wish)
+        wishDao.addAWish(wish)
     }
 
     suspend fun updateWish(wish: Wish){
