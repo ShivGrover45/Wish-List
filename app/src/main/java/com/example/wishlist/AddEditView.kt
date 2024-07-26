@@ -20,15 +20,20 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +50,16 @@ fun AddView(
     navController: NavController,
     color: Color
 ){
+
+    var snackMessage= remember {
+        mutableStateOf("")
+    }
+
+    var scope= rememberCoroutineScope()
+
+    var scaffoldState= rememberScaffoldState()
+
+
     Surface (
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -81,11 +96,21 @@ fun AddView(
                 Button(onClick = { if(viewModel.wishTitle.isNotEmpty()
                     && viewModel.wishDescription.isNotEmpty()){
 
-                    // TODO UpdateWish
+                    // TODO UpdateWish && TODO Add Wish
+
+                    if(id!=0L){
+
+                    }else{
+
+                        viewModel.a
+                    }
 
                 }
                 else{
-                    //TODO Add Wish
+                    //Displaying message for Entering values in respective fields
+
+                    snackMessage.value="Enter Title and Description for your wish"
+
                 }
                 }) {
                     Text(text = if (id!=0L)
@@ -113,7 +138,7 @@ fun WishTextField(
         modifier = Modifier.background(Color.Black)
     ) {
         OutlinedTextField(value = value, onValueChange = onValueChange
-            , label = { Text(text = label, color = Color.Black)}
+            , label = { Text(text = label, color = Color.Black, fontWeight = FontWeight.Bold)}
             , modifier = Modifier.fillMaxWidth()
             , keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             colors = TextFieldDefaults.outlinedTextFieldColors(
