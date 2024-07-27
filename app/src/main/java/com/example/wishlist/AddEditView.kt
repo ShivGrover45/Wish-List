@@ -39,13 +39,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.wishlist.data.Wish
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 @Composable
 fun AddView(
     id:Long,
-    //wish:String,
-    //details:String,
+    wish:String,
+    details:String,
     viewModel: WishViewModel,
     navController: NavController,
     color: Color
@@ -65,6 +67,7 @@ fun AddView(
         color = MaterialTheme.colorScheme.background
     ){
         Scaffold(
+            scaffoldState=scaffoldState,
             topBar = {
                 AppBarView(title = if (id!=0L){
                     stringResource(id = R.string.update_wish)
@@ -83,18 +86,19 @@ fun AddView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(10.dp))
-                WishTextField(label = "Title",value=viewModel.wishTitle, onValueChange = {
-                    viewModel.onWishTitleChange(it)
+                WishTextField(label = "Title",value=viewModel.wishTitleState, onValueChange = {
+                    viewModel.onWishTitleChanged(it)
                 })
-                WishTextField(label = "Description", value =viewModel.wishDescription
+                WishTextField(label = "Description", value =viewModel.wishDescriptionState
                     , onValueChange = {
-                        viewModel.onWishDescriptionChange(it)
+                        viewModel.onWishDescriptionChanged(it)
                     })
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Button(onClick = { if(viewModel.wishTitle.isNotEmpty()
-                    && viewModel.wishDescription.isNotEmpty()){
+                Button(onClick = { if(viewModel.wishTitleState.isNotEmpty()
+                    && viewModel.wishDescriptionState
+                        .isNotEmpty()){
 
                     // TODO UpdateWish && TODO Add Wish
 
@@ -102,7 +106,13 @@ fun AddView(
 
                     }else{
 
-                        viewModel.a
+                        viewModel.addWish(
+                            Wish(
+                                wish=viewModel.wishTitleState.trim(),
+                                description = viewModel.wishDescriptionState.trim()
+                            )
+                        )
+                        snackMessage.value="Wish added"
                     }
 
                 }
@@ -112,6 +122,12 @@ fun AddView(
                     snackMessage.value="Enter Title and Description for your wish"
 
                 }
+
+                    scope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar(snackMessage.value)
+                        navController.navigateUp()
+                    }
+
                 }) {
                     Text(text = if (id!=0L)
                         stringResource(id = R.string.update_wish)
