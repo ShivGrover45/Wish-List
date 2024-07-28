@@ -22,6 +22,7 @@ import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.ModifierLocalModifierNode
@@ -30,7 +31,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.wishlist.data.DummyWish
 import com.example.wishlist.data.Wish
 
 @Composable
@@ -49,7 +49,7 @@ fun HomeView(
         floatingActionButton = {
             FloatingActionButton(onClick = { Toast.makeText(context, "Button Clicked",
                 Toast.LENGTH_SHORT).show()
-                                           navController.navigate(Screen.addScreen.route)
+                navController.navigate(Screen.addScreen.route +"/0L")
                                            },
                 modifier = Modifier.padding(all = 20.dp)
                 ,contentColor = Color.White, backgroundColor = colorResource(id = R.color.app_bar_col)) {
@@ -58,12 +58,16 @@ fun HomeView(
             }
         }
     ) {
+
+        val wishlist=viewModel.getAllWishes.collectAsState(initial = listOf())
+
         LazyColumn(modifier = Modifier
             .fillMaxSize()
             .padding(it)) {
-            items(DummyWish.wishList){
-                 wish -> WishItem(wish = wish) {
-
+            items(wishlist.value){
+                wish -> WishItem(wish = wish){
+                    val id=wish.id
+                    navController.navigate(Screen.addScreen.route + "/$id")
             }
             }
         }
@@ -78,14 +82,16 @@ fun WishItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 4.dp, top = 4.dp, end = 4.dp)
-            .clickable { onClick },
+            .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+            .clickable {
+                       onClick()
+            },
         elevation =CardDefaults.cardElevation(
             defaultElevation = 10.dp
         ),
         colors = CardDefaults.cardColors(
             containerColor = Color.LightGray
-        )
+        ),
 
     ) {
         Column(modifier = Modifier.padding(16.dp)) {

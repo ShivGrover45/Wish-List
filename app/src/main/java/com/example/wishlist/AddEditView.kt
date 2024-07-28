@@ -25,6 +25,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,11 +48,8 @@ import java.util.UUID
 @Composable
 fun AddView(
     id:Long,
-    wish:String,
-    details:String,
     viewModel: WishViewModel,
     navController: NavController,
-    color: Color
 ){
 
     var snackMessage= remember {
@@ -61,7 +60,16 @@ fun AddView(
 
     var scaffoldState= rememberScaffoldState()
 
+    if(id!=0L) {
+       var wishValue=viewModel.getAWishById(id).collectAsState(initial = Wish(0,"",""))
+        viewModel.wishTitleState=wishValue.value.wish
+        viewModel.wishDescriptionState=wishValue.value.description
 
+    }
+    else{
+        viewModel.wishTitleState=""
+        viewModel.wishDescriptionState=""
+    }
     Surface (
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -103,6 +111,14 @@ fun AddView(
                     // TODO UpdateWish && TODO Add Wish
 
                     if(id!=0L){
+
+                        viewModel.updateWish(
+                            Wish(
+                                id=id,
+                                wish = viewModel.wishTitleState.trim(),
+                                description = viewModel.wishDescriptionState.trim()
+                            )
+                        )
 
                     }else{
 

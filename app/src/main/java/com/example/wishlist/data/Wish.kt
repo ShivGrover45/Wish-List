@@ -15,10 +15,3 @@ data class Wish(
     @ColumnInfo("wish-desc")
     val description:String=""
 )
-    object DummyWish {
-        val wishList = listOf(
-            Wish(id=1L,wish = "Noise Fit Pro", description = "An Android Smart Watch"),
-            Wish(id = 2L, wish = "Deadpool 3",
-                description = "Watch latest Deadpool and Wolverine")
-        )
-    }

@@ -20,7 +20,7 @@ abstract  class WishDao {
     abstract suspend fun updateWish(wishEntity:Wish)
 
     @Query("Select * from `wish-table` where id=:id")
-    abstract fun getWishById(id:Long):Flow<List<Wish>>
+    abstract fun getWishById(id:Long):Flow<Wish>
 
     @Delete
     abstract suspend fun deleteWish(wishEntity:Wish)
